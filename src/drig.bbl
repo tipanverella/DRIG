@@ -1,0 +1,18 @@
+\begin{thebibliography}{vdH17}
+
+\bibitem[AS08]{bAlonSpencer2008}
+N.~Alon and J.~Spencer.
+\newblock {\em The Probabilistic Method}.
+\newblock Wiley, 2008.
+
+\bibitem[Gri10]{bGrimmett2010}
+G.~Grimmett.
+\newblock {\em Probability on Graphs}.
+\newblock Cambridge University Press, 2010.
+
+\bibitem[vdH17]{bHofstad2017v1}
+R.~v.~d. Hofstad.
+\newblock {\em Random Graphs and Complex Networks, Volume One}.
+\newblock Cambridge University Press, 2017.
+
+\end{thebibliography}

@@ -1,0 +1,44 @@
+\section{Exploratory Random Walk}\label{sec:erw}
+
+\begin{defn}[Bipartite Graph Instance]\label{defn:big}
+    Let $RBG(V,W,\mathbf{p})$ be a random bipartite graph, we call an instance of $RBG(V,W,\mathbf{p})$ for a given
+    realization of the family $\xi = \{\xi_{v,w}\}_{v\in V, w\in W}$, a \emph{bipartite instance graph}
+    $BIG(V,W,\xi)$.
+\end{defn}
+
+\begin{defn}[Remainder Graphs]\label{defn:remainder}
+    Let $BIG(V,W,\xi)$ be a bipartite instance graph, and let $I \subset W$.
+    The \emph{remainder graph} \[BIG|_{I} = BIG(V|_{I}, W\setminus I, \xi|_{I})\] is the bipartite instance graph on:
+    \begin{itemize}
+        \item $W\setminus I$
+        \item $\displaystyle V|_{I} = V \setminus \left(\bigcup_{i\in I} \left\{v \in V\colon \xi_{v,i}=1 \right\}\right)$
+        \item $\displaystyle \xi|_{I} = \left\{ \begin{array}{cc}
+                                                    \xi_{u,v} & \textrm{if } i \in W\setminus I, u \in V|_{I}\\
+                                                    0 & \textrm{otherwise}
+        \end{array}\right.$
+    \end{itemize}
+\end{defn}
+
+As is canon in the theory of random graphs\cite{bHofstad2017v1, bGrimmett2010, bAlonSpencer2008}, we will now define a
+procedure for revealing the connected component to which a given node belongs.
+
+Our process will explore the bipartite graph whose projection yields the dual random intersection graph.
+We define the procedure recursively using the remainder graphs defined above.
+
+\begin{defn}[Graph Exploration Process]\label{defn:gep}
+    At step $t=0$, $BIG_0=BIG(V,W,\xi)$ and:
+    \begin{itemize}
+        \item $j_0$: is the node whose connected component we want to explore;
+        \item $U_0$: is the set of unexplored items, i.e. $W\setminus \{j_0\}$;
+        \item $V(j_0)$: is the set of users who picked $j_0$, i.e. $\displaystyle V(j_0) = \left\{ v \in V \colon \xi_{v,j_0}=1 \right\}$;
+        \item $\mathcal{N}_0$: is the set of items, not including $j_0$, that the above users picked, i.e. $\mathcal{N}_0 = \displaystyle \bigcup_{u \in V(j_0)} \left\{ j \in U_0 \colon \xi_{u,j}=1 \right\}$;
+        \item $P_0$: is an empty FIFO queue of sets, to which we push $\mathcal{N}_0$;
+        \item $R_0$: is the set of removed nodes, i.e. $R_0 = \left\{ j_0 \right\}$;
+        \item $A_0$: is the empty set of active nodes.
+    \end{itemize}
+    At step $t+1$, $\displaystyle BIG_{t+1} = BIG_t|_{\left\{ j_t \right\}}$:
+    \begin{itemize}
+        \item we update the set of actives
+        \item we pick $j_{t+1}$ from the set of actives $A_{t+1}$ \[A_{t+1} = \left\{ 1 \right.\]
+    \end{itemize}
+\end{defn}

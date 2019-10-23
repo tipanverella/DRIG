@@ -1,0 +1,34 @@
+%! Author = tiparis
+%! Date = 10/19/19
+
+% Preamble
+\documentclass[10pt]{article}
+
+% Packages
+\usepackage{multicol,hyperref}
+\usepackage{graphicx,epsfig,wrapfig}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,mathrsfs}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[ruled]{algorithm2e}
+
+% Document
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{coro}[thm]{Corollary}
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exmp}{Example}[section]
+\theoremstyle{remark}
+\newtheorem{notes}{Remark}
+
+
+\begin{document}
+
+    \input{exploratory_random_walk.tex}
+    \bibliography{GV}
+    \bibliographystyle{alpha}
+
+\end{document}
