@@ -1,14 +1,14 @@
 \section{Exploratory Random Walk}\label{sec:erw}
-
+We start with a couple definitions.
 \begin{defn}[Bipartite Graph Instance]\label{defn:big}
     Let $RBG(V,W,\mathbf{p})$ be a random bipartite graph, we call an instance of $RBG(V,W,\mathbf{p})$ for a given
     realization of the family $\xi = \{\xi_{v,w}\}_{v\in V, w\in W}$, a \emph{bipartite instance graph}
-    $BIG(V,W,\xi)$.
+    $\mathcal{B}(V,W,\xi)$.
 \end{defn}
 
 \begin{defn}[Remainder Graphs]\label{defn:remainder}
-    Let $BIG(V,W,\xi)$ be a bipartite instance graph, and let $I \subset W$.
-    The \emph{remainder graph} \[BIG|_{I} = BIG(V|_{I}, W\setminus I, \xi|_{I})\] is the bipartite instance graph on:
+    Let $\mathcal{B}(V,W,\xi)$ be a bipartite instance graph, and let $I \subset W$.
+    The \emph{remainder graph} \[\mathcal{B}|_{I} = \mathcal{B}(V|_{I}, W\setminus I, \xi|_{I})\] is the bipartite instance graph on:
     \begin{itemize}
         \item $W\setminus I$
         \item $\displaystyle V|_{I} = V \setminus \left(\bigcup_{i\in I} \left\{v \in V\colon \xi_{v,i}=1 \right\}\right)$
@@ -24,21 +24,42 @@ procedure for revealing the connected component to which a given node belongs.
 
 Our process will explore the bipartite graph whose projection yields the dual random intersection graph.
 We define the procedure recursively using the remainder graphs defined above.
-
+Given a bipartite graph between users and items, we explore the connected components of the dual random intersection graph
+by exploring a recursive sequence of bipartite graphs using a generational breadth first search.
+Our graph exploration process will therefore yield a sequence of graphs, a queue of \emph{pre-actives}, and sequences of
+\emph{active}, and \emph{removed} sets.
+The pre-active queue enforces the generational exploration of the component.
+We start by choosing an item, and finding its neighbors via the users that pick it.
+We push that set of neighbors into our pre-active queue, and produce the remainder graph obtained by removing the chosen
+item from the bipartite graph.
+This is now our new bipartite graph on which we will perform the next step of our exploration.
+We finalize our initial step, by adding our initially chosen item to the set of removed.
+In all subsequent steps, we are in one of the following 3 cases:
+\begin{description}
+    \item[stop]: we do this if both the active set and pre-active queue is empty;
+    \item[switch generation]: we do this if the set of active is empty by popping a set out of the queue of pre-actives;
+    \item[uncover an item]: this corresponds to picking the next node to explore from the actives.
+\end{description}
 \begin{defn}[Graph Exploration Process]\label{defn:gep}
-    At step $t=0$, $BIG_0=BIG(V,W,\xi)$ and:
+    At step $t=0$, $\mathcal{B}_0=\mathcal{B}(V,W,\xi)$ and:
     \begin{itemize}
         \item $j_0$: is the node whose connected component we want to explore;
-        \item $U_0$: is the set of unexplored items, i.e. $W\setminus \{j_0\}$;
+        \item $U$: is the set of unexplored items, i.e. $W\setminus \{j_0\}$;
         \item $V(j_0)$: is the set of users who picked $j_0$, i.e. $\displaystyle V(j_0) = \left\{ v \in V \colon \xi_{v,j_0}=1 \right\}$;
-        \item $\mathcal{N}_0$: is the set of items, not including $j_0$, that the above users picked, i.e. $\mathcal{N}_0 = \displaystyle \bigcup_{u \in V(j_0)} \left\{ j \in U_0 \colon \xi_{u,j}=1 \right\}$;
-        \item $P_0$: is an empty FIFO queue of sets, to which we push $\mathcal{N}_0$;
+        \item $\mathcal{N}$: is the set of items, not including $j_0$, that the above users picked, i.e. $\mathcal{N} = \displaystyle \bigcup_{u \in V(j_0)} \left\{ j \in U \colon \xi_{u,j}=1 \right\}$;
+        \item $P_0$: is an empty FIFO queue of sets, to which we push $\mathcal{N}$;
         \item $R_0$: is the set of removed nodes, i.e. $R_0 = \left\{ j_0 \right\}$;
         \item $A_0$: is the empty set of active nodes.
     \end{itemize}
-    At step $t+1$, $\displaystyle BIG_{t+1} = BIG_t|_{\left\{ j_t \right\}}$:
+    At step $t+1$, $\displaystyle \mathcal{B}_{t+1} = \mathcal{B}_t|_{\left\{ j_t \right\}}$:
     \begin{itemize}
-        \item we update the set of actives
-        \item we pick $j_{t+1}$ from the set of actives $A_{t+1}$ \[A_{t+1} = \left\{ 1 \right.\]
-    \end{itemize}
+        \item we update the set of actives and pre-actives if needed in order to pick $j_{t+1}$: \[\left( A_t, P_t \right) = \left\{ \begin{array}{cc} A_t & \textrm{if } A_t \neq \emptyset\\ pop(P_t) & \textrm{otherwise} \end{array} \right.\]
+        \item we pick $j_{t+1}$ from the set of actives $A_{t}$ and set $A_{t+1} = A_t \setminus \left\{ j_{t+1} \right\}$;
+        \item $U$: is the set of unexplored items, i.e. $(W\setminus R_t)\setminus \{j_{t+1}\}$;
+        \item $V(j_{t+1})$: is the set of users who picked $j_{t+1}$ in the remainder graph $\mathcal{B}_{t+1}$, i.e. $\displaystyle V(j_{t+1}) = \left\{ v \in V|_{R_t} \colon \xi_{v,j_{t+1}}=1 \right\}$;
+        \item $\mathcal{N}$: is the set of items, not including $j_{t+1}$, that the above users picked, i.e. $\mathcal{N} = \displaystyle \bigcup_{u \in V(j_{t+1})} \left\{ j \in U \colon \xi_{u,j}=1 \right\}$;
+        \item $P_{t+1}$: is the $P_t$ to which we push $\mathcal{N}$ only if $\mathcal{N} \neq \emptyset$;
+        \item $R_{t+1} = R_t \cup \left\{ j_{t+1} \right\}$.
+     \end{itemize}
+    The process stops whenever both $A_t$ and $P_t$ are empty.
 \end{defn}
