@@ -1,0 +1,19 @@
+---
+title: "TODO"
+author: tiparis
+date: 1/25/20
+output: rmarkdown::html_vignette
+---
+
+1. Lemma 4.2 and 4.3
+    a) Reformulate Lemma 4.2 to index the union over elements of random subsets
+    b) Mention in Lemma 4.3 Hollander reference
+2. New description of the exploration process
+    a) Remainder Graph
+    b) $I_t$
+    c) $V|_{I_t}$
+3. Upper bound Argument
+4. Lower Bound Argument
+5. (TBD) Large Deviations Principles bounds
+
+ps: SEND PGP key to Gromoll
